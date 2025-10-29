@@ -121,14 +121,10 @@ function build_binutils() {
             exit 1
         fi
         echo -e "$Okay Compile Successful !"
+        make distclean > /dev/null 2>&1
+        echo -e "$Okay Clean up !"
     )
-}
-
-function clean_up() {
-    echo -e "$Okay Clean up !"
-    rm -rf binutils-$BINUTILS_VERSION/build/*
 }
 
 download_binutils
 build_binutils
-clean_up
