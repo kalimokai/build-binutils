@@ -88,6 +88,7 @@ function download_binutils() {
         echo "Download binutils source code: binutils-$BINUTILS_VERSION.tar.xz"
         if ! wget $proxy -q --show-progress -O "./source/binutils-$BINUTILS_VERSION.tar.xz" "https://sourceware.org/pub/binutils/releases/binutils-$BINUTILS_VERSION.tar.xz"; then
             echo -e "$ERR Error: Download failed !"
+            exit 1
         fi
         echo -e "$Okay Download Successful !"
     fi
@@ -101,6 +102,7 @@ function build_binutils() {
         echo "Decompressing source code"
         if ! tar -xvf source/binutils-$BINUTILS_VERSION.tar.xz 2>&1 > tar-binutils-$BINUTILS_VERSION.log; then
             echo -e "$ERR Error: Decompressing failed !"
+            exit 1
         fi
         echo -e "$Okay Decompressing Successful !"
     fi
@@ -109,12 +111,14 @@ function build_binutils() {
         
         echo "Compile environment detection"
         if ! ../configure --prefix=$INSTALL_PATH/$BINUTILS_VERSION --disable-gdb --disable-gdbserver --disable-weeror --disable-nls --target=$BUILD_TARGET > ../logs/configure.log 2>&1; then
-            echo -e "$ERR Environmental anomaly !"
+            echo -e "$ERR Environmental failed !"
+            exit 1
         fi
         echo -e "$Okay Compile environment Okay !"
         echo "Compiling"
         if ! (make -j$(nproc --all) > ../logs/build.log 2>&1 && make install > ../logs/install.log 2>&1); then
             echo -e "$ERR Error: Compile failed !"
+            exit 1
         fi
         echo -e "$Okay Compile Successful !"
     )
